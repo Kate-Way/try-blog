@@ -166,8 +166,8 @@ def show_post(post_id):
     form = CommentForm()
     requested_post = BlogPost.query.get(post_id)
     # check if user is logged in
-    if current_user.is_authenticated:
-        if form.validate_on_submit():
+    if form.validate_on_submit():
+        if current_user.is_authenticated:
             comment = Comments(
                 comment=form.comment.data,
                 comment_author=current_user,
@@ -175,9 +175,9 @@ def show_post(post_id):
             )
             db.session.add(comment)
             db.session.commit()
-    else:
-        flash('Login required to write comments. Please login.', 'warning')
-        return redirect(url_for('login'))
+        else:
+            flash('Login required to write comments. Please login.', 'warning')
+            return redirect(url_for('login'))
     return render_template("post.html", post=requested_post, form=form, current_user=current_user)
 
 
